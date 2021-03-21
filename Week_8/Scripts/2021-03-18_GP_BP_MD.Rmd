@@ -1,0 +1,133 @@
+---
+title: "Good Plot Bad Plot"
+author: "Claudia"
+date: "3/18/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE,
+                      fig.path='../Outputs/')
+```
+
+### Description: For my Good Plot & Bad Plot I used the *Palmer Penguins* dataset and made a plot of the Body Mass (g) across species, by sex.  
+
+
+# Load Libraries
+
+```{r}
+library(palmerpenguins)
+library(tidyverse)
+library(here)
+library(praise)
+library(PNWColors)
+library(ggthemes)
+```
+
+
+# Bad Plot
+
+### Annotated Code
+
+```{r}
+## bad plot
+# did not remove NAs in sex and species
+
+penguins <- penguins %>%
+  mutate(sex = recode(sex, 'male' = "Male", 'female' = "Female")) %>%   #change to proper capitalization
+ write_csv(here("Week_8","Data","PenguinData.csv"))
+ 
+
+ggplot(data = penguins, 
+       mapping = aes(x = body_mass_g, #compare species for body mass, 
+                     y = sex,# changed y to lose context
+                     color = year, # added unnecessary year by color legend
+                     fill = sex), #fill color sex
+       stat = "identity") +  #took out facet grid to lose species categorization
+  geom_jitter() + #jitter does not portray a clear picture of the data 
+  labs(title = "How chonky are those Penguins?", #uninformative title & no caption
+       x = "Weight", # switched labels to match data, does not match title (Body Mass)
+       y = "Penguins", #change y axis label
+       fill = "Type")+ # legend label is too ambiguous and in the wrong place
+  theme_economist() + #the theme does not match the figure 
+  theme(axis.title.x = element_text(color = "lightyellow", face = 11), #change axis text color, matches with background and is cramped
+        axis.title.y = element_text(color = "magenta", face = 5))+ # illegible, wrong language
+  ggsave(here("Week_7", "Output", "Bad_Plot.png"), #save plot
+         width = 7, height = 5)
+```
+
+Figure 1: Plot of body mass (g) by sex across three species.
+
+### Why it's a Bad Plot
+
+-   The data set is unfiltered an includes incomplete cases, adding outliers in the plot
+
+-   The code is disorganized
+
+-   The X and Y axis organization is inverted and not the best way to portray the data
+
+-   There is unnecessary data/ color coding such as the year by color legend
+
+-   The data is unorganized, there is no facet wrapping for species categorization and the aesthetics are messy
+
+-   geom_jitter is not the best visualization method in this case.
+
+-   None of the labels are correct, the title is misleading/ wrongly formatted, there is no caption citing sources, the wording is not relevant to the context and the color makes some words illegible.
+
+-   The axis labels are ambiguous, mismatched and in the wrong language
+
+-   The theme does not match the plot and is misleading
+
+-   The legend is irrelevant and repetitive
+
+
+
+
+# Good Plot
+
+### Annotated Code
+
+```{r}
+#### Create boxplot ##################################################
+penguins <- na.omit(penguins) #remove NAs in sex and species
+
+penguins <- penguins %>%
+  mutate(sex = recode(sex, 'male' = "Male", 'female' = "Female")) #change to proper capitalization
+
+ggplot(data = penguins, 
+       mapping = aes(x = species, #compare species for body mass (g)
+                     y = body_mass_g,
+                     fill = species), #fill color species
+       stat = "identity") +  
+  geom_boxplot() +
+  facet_grid(~sex, switch = "x") + #facet for sex within species
+  scale_fill_manual(values = pnw_palette(11)[c(4, 2, 6)]) + #PNW palette fill
+  labs(title = "Comparison of Body Mass (g) Across Species Within Sex", #add title
+       x = "Species", #change x axis label
+       y = "Body Mass (g)", #change y axis label
+       fill = "Species", #change legend label
+       caption = "Source: Palmer Station LTER / palmerpenguins packages") + #add caption
+  theme_classic() + #change theme
+  theme(axis.title.x = element_text(color = "deepskyblue4", face = 2), #change axis text color
+        axis.title.y = element_text(color = "deepskyblue4", face = 2))+
+  ggsave(here("Week_7", "Output", "Good_Plot.png"), #save plot
+         width = 7, height = 5)
+```
+
+Figure 2: Plot of body mass (g) by sex across three species.
+
+### Why it's a Good Plot
+
+-   The code is annotated and segmented for clarity & reproducibility
+
+-   The data was manipulated to show M/F and omit any NA values from the beginning
+
+-   The boxplot clearly represents the data and there is no ambiguity
+
+-   The plot is clearly labeled in addition to having a descriptive caption and a legend.
+
+-   The color scheme and font color are not distracting
+
+-   The labels are short and concise
