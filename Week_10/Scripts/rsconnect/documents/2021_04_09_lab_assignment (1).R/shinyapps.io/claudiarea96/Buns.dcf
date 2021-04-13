@@ -1,0 +1,14 @@
+name: Buns
+title: Buns
+username:
+account: claudiarea96
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3956879
+bundleId: 4467845
+url: https://claudiarea96.shinyapps.io/Buns/
+when: 1618354848.09338
+lastSyncTime: 1618354848.09338
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: 2021_04_05_lab_assignment.R|Fist_SA_script.R
